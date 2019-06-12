@@ -1,27 +1,21 @@
 // REQUIRE
-const RSSCombiner = require('rss-combiner');
+const Parser = require('rss-parser');
 
 // CONSTANTS
-const FEED_SIZE = 20;
+const oParser = new Parser();
+const N_FEED_SIZE = 20;
 
 // TODO read feeds from file
 // TODO publish resultant feed
 // TODO publish X articles per day
+// TODO add file level comments
+// TODO fix jshint complaints
 
-// CONFIG
-let feedConfig = {
-    title:    'Custom Feed',
-    size:     FEED_SIZE,
-    feeds: [
-        'http://feeds.bbci.co.uk/news/technology/rss.xml',
-        'https://www.theguardian.com/uk/technology/rss'
-    ],
-    pubDate: new Date()
-};
-
-// COMBINE
-RSSCombiner(feedConfig)
-.then(function (combinedFeed) {
-    let xml = combinedFeed.xml();
-    console.log(xml);
-});
+// PARSE
+(async function () {
+    let oFeed = await oParser.parseURL('http://feeds.bbci.co.uk/news/technology/rss.xml');
+    console.log(oFeed.title);
+    oFeed.items.forEach(function(oItem){
+        console.log(`${oItem.title} : ${oItem.link}`);
+    });
+})();
